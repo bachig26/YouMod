@@ -110,16 +110,12 @@
     NSLog(@"[YouMod Debug] Description from Renderer is: %s", [description UTF8String]);
     // Try all
     NSDictionary *filters = @{
-        @"horizontal-video-shelf.eml" : @(IS_ENABLED(HideHoriShelf)),
-        @"eml.horizontal-video-shelf" : @(IS_ENABLED(HideHoriShelf)),
-        @"feed_nudge.view"           : @(IS_ENABLED(HideGenMusicShelf)),
-        @"view.feed_nudge"           : @(IS_ENABLED(HideGenMusicShelf)),
-        @"eml.vwc"                   : @(IS_ENABLED(HideMixPlayLists)),
-        @"vwc.eml"                   : @(IS_ENABLED(HideMixPlayLists)),
-        @"eml.shorts-shelf"          : @(IS_ENABLED(HideShortsShelf)),
-        @"shorts_shelf.eml"          : @(IS_ENABLED(HideShortsShelf)),
-        @"shorts_video_cell.eml"     : @(IS_ENABLED(HideShortsShelf)),
-        @"6Shorts"                   : @(IS_ENABLED(HideShortsShelf))
+        @"horizontal-video-shelf": @(IS_ENABLED(HideHoriShelf)),
+        @"feed_nudge": @(IS_ENABLED(HideGenMusicShelf)),
+        @"vwc": @(IS_ENABLED(HideMixPlayLists)),
+        @"shorts_shelf": @(IS_ENABLED(HideShortsShelf)),
+        @"shorts_video_cell": @(IS_ENABLED(HideShortsShelf)),
+        @"6Shorts": @(IS_ENABLED(HideShortsShelf))
     };
     // Loop through the dictionary
     for (NSString *key in filters) {
@@ -128,8 +124,9 @@
             // Special exception for Shorts
             if ([key containsString:@"shorts"] && [description containsString:@"history*"]) {
                 return %orig;
+            } else {
+                return [NSData data];
             }
-            return [NSData data];
         }
     }
     return %orig;
@@ -158,7 +155,7 @@
 
 // Hide Subs Button
 - (void)setClosedCaptionsOrSubtitlesButtonAvailable:(BOOL)arg1 { %orig(NO); }
-
+// - (void)setCaptionsEnabled:(BOOL)arg
 // - (void)setVoiceOverEnabled:(BOOL)arg1
 
 // Hide YouTube Music button
@@ -166,6 +163,148 @@
 
 // TEST - Hide cast button
 - (id)playbackRouteButton { return nil; }
+// - (void)setPreviousButtonHidden:(BOOL)arg
+// - (void)setNextButtonHidden:(BOOL)arg
+/* 
+- (void)setShareButtonAvailable:(BOOL)arg1 {
+    if (IS_ENABLED(kEnableShareButton)) {
+        %orig(YES);
+    } else {
+        %orig(NO);
+    }
+}
+
+- (void)setAddToButtonAvailable:(BOOL)arg1 {
+    if (IS_ENABLED(kEnableSaveToButton)) {
+        %orig(YES);
+    } else {
+        %orig(NO);
+    }
+}
+
+- (BOOL)titleViewHidden {
+    return IS_ENABLED(@"hideVideoTitle_enabled") ? YES : %orig;
+}
+
+%hook YTMainAppControlsOverlayView
+- (void)layoutSubviews {
+	%orig();
+    MSHookIvar<YTTransportControlsButtonView *>(self, "_previousButtonView").backgroundColor = nil;
+    MSHookIvar<YTTransportControlsButtonView *>(self, "_nextButtonView").backgroundColor = nil;
+    MSHookIvar<YTTransportControlsButtonView *>(self, "_seekBackwardAccessibilityButtonView").backgroundColor = nil;
+    MSHookIvar<YTTransportControlsButtonView *>(self, "_seekForwardAccessibilityButtonView").backgroundColor = nil;
+    MSHookIvar<YTPlaybackButton *>(self, "_playPauseButton").backgroundColor = nil;
+}
+%end
+
+%hook YTColdConfig
+- (BOOL)isLandscapeEngagementPanelEnabled {
+    return IS_ENABLED(kHideRightPanel) ? NO : %orig;
+}
+%end
+
+%hook YTHotConfig
+- (BOOL)enableOmitAdvancedMenuInShortsVideoQualityPicker { return YES; }
+- (BOOL)enableShortsVideoQualityPicker { return YES; }
+- (BOOL)iosEnableImmersiveLivePlayerVideoQuality { return YES; }
+- (BOOL)iosEnableShortsPlayerVideoQuality { return YES; }
+- (BOOL)iosEnableShortsPlayerVideoQualityRestartVideo { return YES; }
+- (BOOL)iosEnableSimplerTitleInShortsVideoQualityPicker { return YES; }
+%end
+
+%hook YTShortsPlayerViewController
+- (BOOL)shouldAlwaysEnablePlayerBar { return YES; }
+- (BOOL)shouldEnablePlayerBarOnlyOnPause { return NO; }
+%end
+
+%hook YTReelPlayerViewController
+- (BOOL)shouldAlwaysEnablePlayerBar { return YES; }
+- (BOOL)shouldEnablePlayerBarOnlyOnPause { return NO; }
+%end
+
+%hook YTReelPlayerViewControllerSub
+- (BOOL)shouldAlwaysEnablePlayerBar { return YES; }
+- (BOOL)shouldEnablePlayerBarOnlyOnPause { return NO; }
+%end
+
+%hook YTColdConfig
+- (BOOL)iosEnableVideoPlayerScrubber { return YES; }
+- (BOOL)mobileShortsTablnlinedExpandWatchOnDismiss { return YES; }
+%end
+
+%hook YTHotConfig
+- (BOOL)enablePlayerBarForVerticalVideoWhenControlsHiddenInFullscreen { return YES; }
+%end
+
+%hook YTColdConfig
+- (BOOL)mainAppCoreClientIosEnableStartupAnimation {  // Works!
+    return IS_ENABLED(kYTStartupAnimation) ? YES : NO;
+}
+%end
+
+%hook YTHeaderView
+- (BOOL)stickyNavHeaderEnabled { return YES; } 
+%end
+
+%hook YTColdConfig
+- (BOOL)removeNextPaddleForAllVideos { 
+    return YES; 
+}
+- (BOOL)removePreviousPaddleForAllVideos { 
+    return YES; 
+}
+%end
+
+// Hide Shorts Cells - for uYou 3.0.4+ (PoomSmart/YTUnShorts)
+%hook YTIElementRenderer
+- (NSData *)elementData {
+    // Check if hideShortsCells is enabled
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"hideShortsCells"]) {
+        NSString *description = [self description];
+        
+        BOOL hasShorts = ([description containsString:@"shorts_shelf"] || [description containsString:@"shorts_video_cell"] || [description containsString:@"shorts_grid_shelf_footer"] || [description containsString:@"youtube_shorts_24"]);
+        BOOL hasShortsInHistory = [description containsString:@"compact_video.eml"] && [description containsString:@"youtube_shorts_"];
+
+        if (hasShorts || hasShortsInHistory) {
+            return [NSData data];
+        }
+    }
+    return %orig;
+}
+%end
+
+// Always use remaining time in the video player - @bhackel
+%hook YTPlayerBarController
+// When a new video is played, enable time remaining flag
+- (void)setActiveSingleVideo:(id)arg1 {
+    %orig;
+    if (IS_ENABLED(@"alwaysShowRemainingTime_enabled")) {
+        // Get the player bar view
+        YTInlinePlayerBarContainerView *playerBar = self.playerBar;
+        if (playerBar) {
+            // Enable the time remaining flag
+            playerBar.shouldDisplayTimeRemaining = YES;
+        }
+    }
+}
+%end
+
+// Disable toggle time remaining - @bhackel
+%hook YTInlinePlayerBarContainerView
+- (void)setShouldDisplayTimeRemaining:(BOOL)arg1 {
+    if (IS_ENABLED(@"disableRemainingTime_enabled")) {
+        // Set true if alwaysShowRemainingTime
+        if (IS_ENABLED(@"alwaysShowRemainingTime_enabled")) {
+            %orig(YES);
+        } else {
+            %orig(NO);
+        }
+        return;
+    }
+    %orig;
+}
+%end
+*/
 %end
 
 // อื่นๆ
@@ -262,11 +401,12 @@
 - (BOOL)enabled { return NO; }
 - (void)setEnabled:(BOOL)arg1 { %orig(NO); }
 %end
-*/
 
+/*
 %hook YTInlinePlayerBarContainerView
-- (void)setPlayerBarAlpha:(CGFloat)alpha { %orig(1.0); }
+- (void)setPlayerBarAlpha:(CGFloat)alpha { %orig(1.0); } // Force seek bar i guess
 %end
+*/
 
 // Remove Watermarks
 %hook YTAnnotationsViewController
