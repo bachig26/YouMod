@@ -1,7 +1,7 @@
 # YouMod
-**Progress: Around 90% of the features have been implemented.** (Not counting from feature requests)
+**Progress: Around 95% of the features have been implemented.** (Not counting from feature requests)
 
-A tweak that's try to recreate features like in YTLite as much as possible. Contributors are welcome! ^^
+A tweak that's try to recreate features like in YTLite as much as possible. (Not all of them) Contributors are welcome! ^^
 
 If you want to contribute this project, scroll down below for how to do it.
 ## Why I created this project?

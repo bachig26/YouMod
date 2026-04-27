@@ -1,6 +1,8 @@
 // All Codes are adapt from YTLite and uYouEnhanced + Some of my research
 #import "Headers.h"
 
+#define isDarkMode2 ([[UIApplication sharedApplication] keyWindow].rootViewController.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)
+
 Class YTILikeResponseClass, YTIDislikeResponseClass, YTIRemoveLikeResponseClass;
 
 // AccessGroupID
@@ -22,7 +24,6 @@ static NSString *accessGroupID() {
     NSString *accessGroup = [(__bridge NSDictionary *)result objectForKey:(__bridge NSString *)kSecAttrAccessGroup];
     return accessGroup;
 }
-
 
 // YouTube-X (https://github.com/PoomSmart/YouTube-X)
 static BOOL isProductList(YTICommand *command) {
@@ -189,6 +190,9 @@ static BOOL isDarkMode(UIView *view) {
     if (IS_ENABLED(HideShortsSubscriptButton) && [self.accessibilityIdentifier isEqualToString:@"id.ui.shorts_paused_state.subscriptions_button"]) self.hidden = YES;
     if (IS_ENABLED(HideShortsLiveButton) && [self.accessibilityIdentifier isEqualToString:@"id.ui.shorts_paused_state.live_button"]) self.hidden = YES;
     if (IS_ENABLED(HideShortsToVideo) && [self.accessibilityIdentifier isEqualToString:@"id.reel_multi_format_link"]) self.hidden = YES;
+    if (IS_ENABLED(HideSubButton) && [self.accessibilityIdentifier isEqualToString:@"eml.animated_subscribe_button"]) self.hidden = YES;
+    if (IS_ENABLED(HideShoppingButton) && [self.accessibilityIdentifier isEqualToString:@"eml.header_store_button"]) self.hidden = YES;
+    if (IS_ENABLED(HideMemberButton) && [self.accessibilityIdentifier isEqualToString:@"id.sponsor_button"]) self.hidden = YES;
     if (([self.accessibilityIdentifier isEqualToString:@"eml.expandable_metadata.vpp"])) [self removeFromSuperview];
 }
 
@@ -243,11 +247,6 @@ static BOOL isDarkMode(UIView *view) {
         if (IS_ENABLED(HideVoiceSearch) && [subview.accessibilityLabel isEqualToString:NSLocalizedString(@"search.voice.access", nil)]) subview.hidden = YES;
         if (IS_ENABLED(HideCastButtonNav) && [subview.accessibilityIdentifier isEqualToString:@"id.mdx.playbackroute.button"]) subview.hidden = YES;
     }
-}
-// NEW: Hide iSponsorBlock button
-- (void)setButton:(id)arg1 forType:(unsigned long long)arg2 {
-    if (arg2 && arg2 == 'ispb' && IS_ENABLED(HideiSponsorBlock)) return;
-    %orig;
 }
 %end
 

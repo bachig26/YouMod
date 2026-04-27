@@ -50,12 +50,14 @@
 #define HideSearch @"YouModHideSearchButton"
 #define HideVoiceSearch @"YouModHideVoiceSearchButton"
 #define HideCastButtonNav @"YouModHideCastButtonNavigationBar"
-#define HideiSponsorBlock @"YouModHideiSponsorBlockButton"
 // Feed
 #define HideSubbar @"YouModHideSubbar"
 #define HideGenMusicShelf @"YouModHideGenMusicShelf"
 #define HideShortsShelf @"YouModHideShortsShelf"
 #define HideSearchHis @"YouModHideSearchHistoryAndSuggestions"
+#define HideSubButton @"YouModHideSubscribeButton"
+#define HideShoppingButton @"YouModHideShoppingButton"
+#define HideMemberButton @"YouModHideMemberButton"
 // Player
 #define HideAutoPlayToggle @"YouModHideAutoPlayToggle"
 #define HideCaptionsButton @"YouModHideCaptionsButton"
@@ -191,4 +193,8 @@
 - (void)exportYouModSettingsFromVC:(UIViewController *)vc;
 - (void)importYouModSettingsFromVC:(UIViewController *)vc;
 - (void)restoreYouModDefaults;
+@end
+
+@interface YTColor : UIColor
++ (UIColor *)blackPure;
 @end

@@ -213,9 +213,8 @@ static NSString *GetCacheSize() { // YTLite - @dayanch96
         }];
     [sectionItems addObject:cache];
 
-    NSString *cacheDescription = [NSString stringWithFormat:@"%@", GetCacheSize()];
     YTSettingsSectionItem *clearCache = [YTSettingsSectionItemClass itemWithTitle:LOC(@"CLEARCACHE")
-        titleDescription:cacheDescription
+        titleDescription:GetCacheSize()
         accessibilityIdentifier:nil
         detailTextBlock:nil
         selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
@@ -254,7 +253,7 @@ static NSString *GetCacheSize() { // YTLite - @dayanch96
         }];
     [sectionItems addObject:apper];
 
-    // OLED Keyboard
+    // OLED keyboard
     YTSettingsSectionItem *oledkeyboard = [YTSettingsSectionItemClass switchItemWithTitle:LOC(@"OLED_KEYBOARD")
         titleDescription:LOC(@"OLED_KEYBOARD_DESC")
         accessibilityIdentifier:nil
@@ -265,18 +264,6 @@ static NSString *GetCacheSize() { // YTLite - @dayanch96
         }
         settingItemId:0];
     [sectionItems addObject:oledkeyboard];
-
-    /*
-    // Perference Mgr - NEEDS TO DO THE LOGIC
-    YTSettingsSectionItem *github = [YTSettingsSectionItemClass itemWithTitle:nil
-        titleDescription:@"Github"
-        accessibilityIdentifier:nil
-        detailTextBlock:nil
-        selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
-            return NO;
-        }];
-    [sectionItems addObject:github];
-    */ 
 
     // Section 4
     // Navigation bar
@@ -375,18 +362,6 @@ static NSString *GetCacheSize() { // YTLite - @dayanch96
         settingItemId:0];
     [sectionItems addObject:hidecastbuttonnav];
 
-    // Hide iSponsorBlock button
-    YTSettingsSectionItem *hideisponsorblock = [YTSettingsSectionItemClass switchItemWithTitle:LOC(@"HIDE_ISPONSORBLOCK")
-        titleDescription:LOC(@"HIDE_ISPONSORBLOCK_DESC")
-        accessibilityIdentifier:nil
-        switchOn:IS_ENABLED(HideiSponsorBlock)
-        switchBlock:^BOOL (YTSettingsCell *cell, BOOL enabled) {
-            [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:HideiSponsorBlock];
-            return YES;
-        }
-        settingItemId:0];
-    [sectionItems addObject:hideisponsorblock];
-
     // Section 5
     // Feed
     YTSettingsSectionItem *feed = [YTSettingsSectionItemClass itemWithTitle:nil
@@ -445,6 +420,42 @@ static NSString *GetCacheSize() { // YTLite - @dayanch96
         }
         settingItemId:0];
     [sectionItems addObject:hidesearchhis];
+
+    // Hide subscribe button
+    YTSettingsSectionItem *hidesubbutton = [YTSettingsSectionItemClass switchItemWithTitle:LOC(@"HIDE_SUB_BUTTON")
+        titleDescription:LOC(@"HIDE_SUB_BUTTON_DESC")
+        accessibilityIdentifier:nil
+        switchOn:IS_ENABLED(HideSubButton)
+        switchBlock:^BOOL (YTSettingsCell *cell, BOOL enabled) {
+            [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:HideSubButton];
+            return YES;
+        }
+        settingItemId:0];
+    [sectionItems addObject:hidesubbutton];
+
+    // Hide shopping button
+    YTSettingsSectionItem *hideshopbutton = [YTSettingsSectionItemClass switchItemWithTitle:LOC(@"HIDE_SHOP_BUTTON")
+        titleDescription:LOC(@"HIDE_SHOP_BUTTON_DESC")
+        accessibilityIdentifier:nil
+        switchOn:IS_ENABLED(HideShoppingButton)
+        switchBlock:^BOOL (YTSettingsCell *cell, BOOL enabled) {
+            [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:HideShoppingButton];
+            return YES;
+        }
+        settingItemId:0];
+    [sectionItems addObject:hideshopbutton];
+
+    // Hide member button
+    YTSettingsSectionItem *hidemembutton = [YTSettingsSectionItemClass switchItemWithTitle:LOC(@"HIDE_MEMBER_BUTTON")
+        titleDescription:LOC(@"HIDE_MEMBER_BUTTON_DESC")
+        accessibilityIdentifier:nil
+        switchOn:IS_ENABLED(HideMemberButton)
+        switchBlock:^BOOL (YTSettingsCell *cell, BOOL enabled) {
+            [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:HideMemberButton];
+            return YES;
+        }
+        settingItemId:0];
+    [sectionItems addObject:hidemembutton];
 
     // Section 6
     // Player
