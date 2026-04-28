@@ -24,6 +24,9 @@
 #import <YouTubeHeader/YTPlayerOverlayProvider.h>
 #import <YouTubeHeader/YTReelModel.h>
 #import <YouTubeHeader/YTAlertView.h>
+#import <YouTubeHeader/YTVarispeedSwitchController.h>
+#import <YouTubeHeader/YTVarispeedSwitchControllerImpl.h>
+#import <YouTubeHeader/YTVarispeedSwitchControllerOption.h>
 #import <dlfcn.h>
 
 // For Settings.x
